@@ -15,3 +15,9 @@ UI (React/Vue/etc) -> Tabria state engine -> application logic
 ```
 
 Use Tabria to keep navigation and tab behavior consistent, while your UI layer only renders state.
+
+The API is split into:
+
+- `core`: constructors for creating state
+- `actions`: immutable write operations
+- `selectors`: read-only derived access for view/UI code
