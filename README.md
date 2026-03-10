@@ -149,50 +149,65 @@ npm install @reiwuzen/tabria
 ## Usage
 
 ```ts
-import { Tabria } from "@reiwuzen/tabria";
+import {
+  createWorkspace,
+  createTab,
+  createScreen,
+  addTab,
+  openTab,
+  pushScreen,
+  updateScreenState,
+  getActiveTab,
+  getActiveScreen,
+  type Workspace,
+} from "@reiwuzen/tabria";
 
-let workspace: Tabria.Workspace = Tabria.core.createWorkspace();
+let workspace: Workspace = createWorkspace();
 
-const tab = Tabria.core.createTab({ title: "Library" });
-workspace = Tabria.operations.addTab(workspace, tab);
+const tab = createTab({ title: "Library" });
+workspace = addTab(workspace, tab);
 
-workspace = Tabria.operations.openTab(workspace, { title: "Manga" });
+workspace = openTab(workspace, { title: "Manga" });
 
-const library = Tabria.core.createScreen({
+const library = createScreen({
   type: "library",
   view: "grid",
 });
-workspace = Tabria.operations.pushScreen(workspace, tab.id, library);
+workspace = pushScreen(workspace, tab.id, library);
 
-workspace = Tabria.operations.updateScreenState(workspace, tab.id, {
+workspace = updateScreenState(workspace, tab.id, {
   section: "favorites",
 });
+
+const activeTab = getActiveTab(workspace);
+const activeScreen = getActiveScreen(workspace);
 ```
 
 ## API Reference
 
-### Namespace exports
+### Grouped exports (optional)
 
-- `Tabria.core`
-- `Tabria.operations`
-- `Tabria.api` (merged convenience API)
+- `core`
+- `actions`
+- `selectors`
+- `api` (merged convenience API)
 
 ### Types
 
-- `Tabria.Workspace`
-- `Tabria.Tab`
-- `Tabria.TabID`
-- `Tabria.Screen`
-- `Tabria.ScreenID`
-- `Tabria.JsonObj`
+- `Workspace`
+- `Tab`
+- `TabID`
+- `Screen`
+- `ScreenID`
+- `JsonObj`
 
-### `Tabria.core`
+### `core`
 
 - `createTab`
 - `createScreen`
 - `createWorkspace`
 
-### `Tabria.operations`
+### `actions`
 
 - `openTab`
 - `addTab`
@@ -205,9 +220,21 @@ workspace = Tabria.operations.updateScreenState(workspace, tab.id, {
 - `replaceScreen`
 - `updateScreenState`
 
+### `selectors`
+
+- `getTabs`
+- `getTab`
+- `getActiveTab`
+- `getActiveScreen`
+- `getScreenStack`
+
+Selectors are read-only helpers for view code.
+Use `actions` for any state updates.
+
 ## Behavior Notes
 
 - All operations are pure: they return new state objects instead of mutating inputs.
+- Selectors are pure read helpers and should be used for view/derived access only.
 - If an operation targets a non-existent tab, the original state is returned.
 - `closeTab` appends the closed tab to `recentlyClosed` and sets `closedAt`.
 - `reopenClosedTab()` restores the most recently closed tab by default.
