@@ -38,3 +38,9 @@ type Screen = {
 Each tab owns a `screenStack`, for example:
 
 `[Library, Manga, Reader]`
+
+## Read vs write
+
+- Use `selectors` to read/derive view data from this model.
+- Use `actions` to create new state values.
+- Do not mutate state directly from UI code.
