@@ -1,6 +1,6 @@
 {
   "name": "@reiwuzen/tabria",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "pnpm publish --access public",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -25,9 +25,7 @@
   "author": "Rei WuZen",
   "license": "ISC",
   "packageManager": "pnpm@10.30.3",
-  "dependencies": {
-    
-  },
+  "dependencies": {},
   "devDependencies": {
     "tsup": "^8.5.0",
     "typescript": "^5.9.2"
