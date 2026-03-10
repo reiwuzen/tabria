@@ -1,16 +1,25 @@
 # API
 
-## Namespace
+## Module
 
 ```ts
-import { Tabria } from "tabria";
+import {
+  createWorkspace,
+  openTab,
+  core,
+  actions,
+  selectors,
+  api,
+  type Workspace,
+} from "@reiwuzen/tabria";
 ```
 
 Exports:
 
-- `Tabria.core`
-- `Tabria.operations`
-- `Tabria.api` (`core + operations`)
+- flat named exports for all constructors, actions, and selectors
+- all public types as module types (`Workspace`, `Tab`, `Screen`, etc.)
+- optional grouped exports: `core`, `actions`, `selectors`, `api`
+- selectors are read-only view helpers; use actions to mutate state
 
 ## Core
 
@@ -18,7 +27,7 @@ Exports:
 - `createTab(opts?)`
 - `createScreen(opts?)`
 
-## Operations
+## Actions
 
 - `openTab(state, opts?)`
 - `addTab(state, tab)`
@@ -31,11 +40,25 @@ Exports:
 - `replaceScreen(state, tabId, screen)`
 - `updateScreenState(state, tabId, patch)`
 
+## Selectors
+
+- `getTabs(state)`
+- `getTab(state, tabId)`
+- `getActiveTab(state)`
+- `getActiveScreen(state, tabId?)`
+- `getScreenStack(state, tabId?)`
+
+Selectors are for derived read access only.
+They should not be used to mutate any part of workspace state.
+
+See also: `./selectors.md`
+
 ## Quick Example
 
 ```ts
-import { Tabria } from "tabria";
+import { createWorkspace, openTab, getActiveTab } from "@reiwuzen/tabria";
 
-let state = Tabria.core.createWorkspace();
-state = Tabria.operations.openTab(state, { title: "Library" });
+let state = createWorkspace();
+state = openTab(state, { title: "Library" });
+const activeTab = getActiveTab(state);
 ```
