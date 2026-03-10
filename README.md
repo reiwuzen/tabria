@@ -139,17 +139,17 @@ Tabria is designed to be:
 ## Installation
 
 ```bash
-pnpm add tabria
+pnpm add @reiwuzen/tabria
 ```
 
 ```bash
-npm install tabria
+npm install @reiwuzen/tabria
 ```
 
 ## Usage
 
 ```ts
-import { Tabria } from "tabria";
+import { Tabria } from "@reiwuzen/tabria";
 
 let workspace: Tabria.Workspace = Tabria.core.createWorkspace();
 
