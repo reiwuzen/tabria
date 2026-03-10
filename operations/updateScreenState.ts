@@ -19,10 +19,13 @@ export const updateScreenState = (
 
     const top = stack[stack.length - 1]
 
-    const updatedScreen:Screen = {
+    const baseState =
+      typeof top.state === "object" && top.state !== null ? top.state : {}
+
+    const updatedScreen: Screen = {
       ...top,
       state: {
-        ...(top.state ?? {}),
+        ...baseState,
         ...patch
       }
     }
