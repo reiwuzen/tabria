@@ -8,29 +8,39 @@ export const closeTab = (
   state: WorkspaceState,
   tabId: TabId
 ): WorkspaceState => {
-  const index = state.tabs.findIndex(t => t.id === tabId)
+  const index = state.tabs.openOrder.findIndex(t => t === tabId)
   if (index === -1) return state
 
+  const tab = state.tabs.storage[tabId]
   const closedTab = {
-    ...state.tabs[index],
-    closedAt: Date.now()
+    ...tab,
+    updatedAt: Date.now(),
+    closedAt: Date.now(),
+    runtimeState: "discarded" as const
   }
 
-  const tabs = state.tabs.filter(t => t.id !== tabId)
+  const openOrder = state.tabs.openOrder.filter(id => id !== tabId)
 
   let activeTab = state.activeTab
 
   if (state.activeTab === tabId) {
     activeTab =
-      tabs[index]?.id ??
-      tabs[index - 1]?.id ??
+      openOrder[index] ??
+      openOrder[index - 1] ??
       null
   }
 
   return {
     ...state,
-    tabs,
+    tabs: {
+      ...state.tabs,
+      openOrder,
+      closedOrder: [tabId, ...state.tabs.closedOrder],
+      storage: {
+        ...state.tabs.storage,
+        [tabId]: closedTab
+      }
+    },
     activeTab,
-    recentlyClosed: [closedTab, ...state.recentlyClosed]
   }
 }
