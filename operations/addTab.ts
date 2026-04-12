@@ -9,11 +9,18 @@ export const addTab = (
   state: WorkspaceState,
   tab: Tab
 ): WorkspaceState => {
-  if (state.tabs.some(t => t.id === tab.id)) return state
+  if (state.tabs.storage[tab.id]) return state
 
   return {
     ...state,
-    tabs: [...state.tabs, tab],
+    tabs: {
+      ...state.tabs,
+      openOrder: [...state.tabs.openOrder, tab.id],
+      storage: {
+        ...state.tabs.storage,
+        [tab.id]: tab
+      }
+    },
     activeTab: tab.id
   }
 }
