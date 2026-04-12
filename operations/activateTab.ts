@@ -8,7 +8,7 @@ export const activateTab = (
   state: WorkspaceState,
   tabId: TabId
 ): WorkspaceState => {
-  const exists = state.tabs.some(tab => tab.id === tabId)
+  const exists = !!state.tabs.storage[tabId] && state.tabs.openOrder.includes(tabId)
 
   if (!exists) return state
 
