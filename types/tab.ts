@@ -1,5 +1,5 @@
 import type { JsonObject } from "./misc";
-import type { PageState } from "./page";
+import type { PageId, PageState } from "./page";
 
 /**
  * Branded identifier for a tab.
@@ -19,7 +19,7 @@ export type Tab = {
   closedAt?: number;
   runtimeState: TabRuntimeState;
   pages: PageState;
-  currentPageId: string;
+  currentPageId: PageId | null;
   meta?: JsonObject;
 };
 
