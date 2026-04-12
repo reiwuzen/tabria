@@ -23,27 +23,39 @@ export function reopenClosedTab(
   state: WorkspaceState,
   tabId?: TabId
 ): WorkspaceState {
-
-  if (state.recentlyClosed.length === 0) return state
+  if (state.tabs.closedOrder.length === 0) return state
 
   let index = 0
 
   if (tabId) {
-    index = state.recentlyClosed.findIndex(t => t.id === tabId)
+    index = state.tabs.closedOrder.findIndex(t => t === tabId)
     if (index === -1) return state
   }
 
-  const tab = state.recentlyClosed[index]
+  const targetId = state.tabs.closedOrder[index]
+  const tab = state.tabs.storage[targetId]
 
-  const recentlyClosed = [
-    ...state.recentlyClosed.slice(0, index),
-    ...state.recentlyClosed.slice(index + 1)
+  const closedOrder = [
+    ...state.tabs.closedOrder.slice(0, index),
+    ...state.tabs.closedOrder.slice(index + 1)
   ]
 
   return {
     ...state,
-    tabs: [...state.tabs, tab],
+    tabs: {
+      ...state.tabs,
+      openOrder: [...state.tabs.openOrder, targetId],
+      closedOrder,
+      storage: {
+        ...state.tabs.storage,
+        [targetId]: {
+          ...tab,
+          updatedAt: Date.now(),
+          closedAt: undefined,
+          runtimeState: "loaded"
+        }
+      }
+    },
     activeTab: tab.id,
-    recentlyClosed
   }
 }
