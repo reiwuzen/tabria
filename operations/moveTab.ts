@@ -9,19 +9,22 @@ export const moveTab = (
   tabId: TabId,
   toIndex: number
 ): WorkspaceState => {
-  const fromIndex = state.tabs.findIndex(t => t.id === tabId)
+  const fromIndex = state.tabs.openOrder.findIndex(t => t === tabId)
   if (fromIndex === -1) return state
 
-  const tabs = [...state.tabs]
+  const openOrder = [...state.tabs.openOrder]
 
-  const [tab] = tabs.splice(fromIndex, 1)
+  const [tab] = openOrder.splice(fromIndex, 1)
 
-  const clampedIndex = Math.max(0, Math.min(toIndex, tabs.length))
+  const clampedIndex = Math.max(0, Math.min(toIndex, openOrder.length))
 
-  tabs.splice(clampedIndex, 0, tab)
+  openOrder.splice(clampedIndex, 0, tab)
 
   return {
     ...state,
-    tabs
+    tabs: {
+      ...state.tabs,
+      openOrder
+    }
   }
 }
