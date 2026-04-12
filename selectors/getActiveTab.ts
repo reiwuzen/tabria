@@ -8,6 +8,6 @@ import { cloneTab } from "./clone";
 export const getActiveTab = (state: WorkspaceState): Tab | undefined => {
   if (state.activeTab === null) return undefined;
 
-  const tab = state.tabs.find((item) => item.id === state.activeTab);
+  const tab = state.tabs.storage[state.activeTab];
   return tab ? cloneTab(tab) : undefined;
 };
