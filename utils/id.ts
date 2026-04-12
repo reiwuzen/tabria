@@ -1,26 +1,26 @@
 import { TabId } from "../types/tab";
-import type { ScreenId } from "../types/screen";
+import type { PageId } from "../types/page";
 
 /**
  * Creates a branded tab ID.
  */
 export function createId(mode: "tabId"): TabId;
 /**
- * Creates a branded screen ID.
+ * Creates a branded page ID.
  */
-export function createId(mode: "screenId"): ScreenId;
+export function createId(mode: "PageId"): PageId;
 
 /**
- * Creates a branded identifier for tabs or screens.
+ * Creates a branded identifier for tabs or pages.
  */
-export function createId(mode: "tabId" | "screenId") {
+export function createId(mode: "tabId" | "PageId") {
   const id = crypto.randomUUID();
 
   switch (mode) {
     case "tabId":
       return id as TabId;
 
-    case "screenId":
-      return id as ScreenId;
+    case "PageId":
+      return id as PageId;
   }
 }
