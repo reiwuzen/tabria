@@ -9,6 +9,6 @@ export const getTab = (
   state: WorkspaceState,
   tabId: TabId
 ): Tab | undefined => {
-  const tab = state.tabs.find((item) => item.id === tabId);
+  const tab = state.tabs.storage[tabId];
   return tab ? cloneTab(tab) : undefined;
 };
