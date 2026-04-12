@@ -1,4 +1,4 @@
-import type { Screen } from "../types/screen";
+import type { Page } from "../types/page";
 import type { Tab } from "../types/tab";
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> => {
@@ -22,19 +22,27 @@ const cloneValue = <T>(value: T): T => {
   return value;
 };
 
-export const cloneScreen = <TState = unknown>(
-  screen: Screen<TState>
-): Screen<TState> => {
+export const clonePage = <TState = unknown>(
+  page: Page<TState>,
+): Page<TState> => {
   return {
-    ...screen,
-    state: cloneValue(screen.state),
+    ...page,
+    state: cloneValue(page.state),
+    meta: cloneValue(page.meta),
   };
 };
+
+export const cloneScreen = clonePage;
 
 export const cloneTab = (tab: Tab): Tab => {
   return {
     ...tab,
-    screenStack: tab.screenStack.map((screen) => cloneScreen(screen)),
+    pages: {
+      order: [...tab.pages.order],
+      storage: Object.fromEntries(
+        tab.pages.order.map((pageId) => [pageId, clonePage(tab.pages.storage[pageId])]),
+      ) as Tab["pages"]["storage"],
+    },
     meta: cloneValue(tab.meta),
   };
 };
