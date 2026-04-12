@@ -1,6 +1,6 @@
 {
   "name": "@reiwuzen/tabria",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "pnpm publish --access public",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
