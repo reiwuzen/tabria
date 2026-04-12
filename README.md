@@ -17,8 +17,8 @@ The library only handles state transitions, such as:
 - opening tabs
 - closing tabs
 - switching tabs
-- navigating between screens inside a tab
-- restoring closed tabs
+- navigating between pages inside a tab
+- restoring closed tabs from closed history
 
 Your UI framework simply subscribes to the state and renders it.
 
@@ -31,8 +31,9 @@ The global state container.
 ```text
 Workspace
   activeTab
-  tabs[]
-  recentlyClosed[]
+  tabs.openOrder[]
+  tabs.closedOrder[]
+  tabs.storage{}
 ```
 
 ### Tab
@@ -45,21 +46,27 @@ Tab
   title
   createdAt
   updatedAt
-  screenStack[]
+  runtimeState
+  pages.order[]
+  pages.storage{}
+  currentPageId
 ```
 
-A tab can contain multiple screens.
+A tab can contain multiple pages.
 
-### Screen
+### Page
 
-A navigation unit inside a tab.
+A navigation entry inside a tab.
 
 ```text
-Screen
+Page
   id
+  key
+  url
   type
   view
   state
+  meta
 ```
 
 Example:
@@ -70,9 +77,9 @@ view: "vertical"
 state: { page: 12 }
 ```
 
-### Screen Stack
+### Page History
 
-Each tab maintains its own navigation stack.
+Each tab maintains its own ordered page history.
 
 Example navigation:
 
@@ -82,7 +89,7 @@ Library
     -> Reader
 ```
 
-Stack representation:
+History representation:
 
 ```text
 [Library, Manga, Reader]
@@ -90,10 +97,10 @@ Stack representation:
 
 Operations include:
 
-- `pushScreen`
-- `popScreen`
-- `replaceScreen`
-- `updateScreenState`
+- `pushPage`
+- `popPage`
+- `replacePage`
+- `updatePageState`
 
 ## Core capabilities
 
@@ -110,22 +117,18 @@ Tabria provides primitives for:
 - `moveTab`
 - `reopenClosedTab`
 
-### Screen navigation
+### Page navigation
 
-- `createScreen`
-- `pushScreen`
-- `popScreen`
-- `replaceScreen`
-- `updateScreenState`
+- `createPage`
+- `pushPage`
+- `popPage`
+- `replacePage`
+- `updatePageState`
 
-### Tab history
+### Closed tab history
 
-- `recentlyClosed`
+- `tabs.closedOrder`
 - `reopenClosedTab()`
-
-This enables browser-like behavior:
-
-- `Ctrl + Shift + T`
 
 ## Design goals
 
@@ -152,13 +155,13 @@ npm install @reiwuzen/tabria
 import {
   createWorkspace,
   createTab,
-  createScreen,
+  createPage,
   addTab,
   openTab,
-  pushScreen,
-  updateScreenState,
+  pushPage,
+  updatePageState,
   getActiveTab,
-  getActiveScreen,
+  getActivePage,
   type Workspace,
 } from "@reiwuzen/tabria";
 
@@ -169,18 +172,18 @@ workspace = addTab(workspace, tab);
 
 workspace = openTab(workspace, { title: "Manga" });
 
-const library = createScreen({
+const library = createPage({
   type: "library",
   view: "grid",
 });
-workspace = pushScreen(workspace, tab.id, library);
+workspace = pushPage(workspace, tab.id, library);
 
-workspace = updateScreenState(workspace, tab.id, {
+workspace = updatePageState(workspace, tab.id, {
   section: "favorites",
 });
 
 const activeTab = getActiveTab(workspace);
-const activeScreen = getActiveScreen(workspace);
+const activePage = getActivePage(workspace);
 ```
 
 ## API Reference
@@ -197,14 +200,16 @@ const activeScreen = getActiveScreen(workspace);
 - `Workspace`
 - `Tab`
 - `TabID`
-- `Screen`
-- `ScreenID`
+- `TabState`
+- `Page`
+- `PageID`
+- `PageState`
 - `JsonObj`
 
 ### `core`
 
 - `createTab`
-- `createScreen`
+- `createPage`
 - `createWorkspace`
 
 ### `actions`
@@ -215,18 +220,18 @@ const activeScreen = getActiveScreen(workspace);
 - `closeTab`
 - `moveTab`
 - `reopenClosedTab`
-- `pushScreen`
-- `popScreen`
-- `replaceScreen`
-- `updateScreenState`
+- `pushPage`
+- `popPage`
+- `replacePage`
+- `updatePageState`
 
 ### `selectors`
 
 - `getTabs`
 - `getTab`
 - `getActiveTab`
-- `getActiveScreen`
-- `getScreenStack`
+- `getActivePage`
+- `getPageStack`
 
 Selectors are read-only helpers for view code.
 Use `actions` for any state updates.
@@ -236,7 +241,7 @@ Use `actions` for any state updates.
 - All operations are pure: they return new state objects instead of mutating inputs.
 - Selectors are pure read helpers and should be used for view/derived access only.
 - If an operation targets a non-existent tab, the original state is returned.
-- `closeTab` appends the closed tab to `recentlyClosed` and sets `closedAt`.
+- `closeTab` moves the tab ID from `tabs.openOrder` to `tabs.closedOrder`, sets `closedAt`, and marks the tab `runtimeState` as `discarded`.
 - `reopenClosedTab()` restores the most recently closed tab by default.
 - `reopenClosedTab(tabId)` restores a specific closed tab when found.
 
