@@ -8,7 +8,9 @@ import type { Tab } from "../types/tab";
 type CreateWorkspaceOptions = {
   activeTab?: TabId | null;
   tabs?: Tab[];
-  recentlyClosed?: Tab[];
+  openOrder?: TabId[];
+  closedOrder?: TabId[];
+  storage?: Record<TabId, Tab>;
 };
 
 /**
@@ -17,18 +19,27 @@ type CreateWorkspaceOptions = {
 export const createWorkspace = (
   opts: CreateWorkspaceOptions = {}
 ): WorkspaceState => {
-  const tabs = opts.tabs ?? [];
-  const recentlyClosed = opts.recentlyClosed ?? [];
+  const openOrder = opts.openOrder ?? opts.tabs?.map((tab) => tab.id) ?? [];
+  const closedOrder = opts.closedOrder ?? [];
+  const storage =
+    opts.storage ??
+    (Object.fromEntries((opts.tabs ?? []).map((tab) => [tab.id, tab])) as Record<
+      TabId,
+      Tab
+    >);
   const activeTab =
     opts.activeTab !== undefined
       ? opts.activeTab
-      : tabs.length > 0
-        ? tabs[tabs.length - 1].id
+      : openOrder.length > 0
+        ? openOrder[openOrder.length - 1]
         : null;
 
   return {
     activeTab,
-    tabs,
-    recentlyClosed,
+    tabs: {
+      openOrder,
+      closedOrder,
+      storage,
+    },
   };
 };
