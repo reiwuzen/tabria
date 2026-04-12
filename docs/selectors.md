@@ -16,8 +16,8 @@ Use `actions` for all state changes.
 - `getTabs(state)`
 - `getTab(state, tabId)`
 - `getActiveTab(state)`
-- `getActiveScreen(state, tabId?)`
-- `getScreenStack(state, tabId?)`
+- `getActivePage(state, tabId?)`
+- `getPageStack(state, tabId?)`
 
 ## Usage
 
@@ -26,7 +26,7 @@ import {
   createWorkspace,
   openTab,
   getActiveTab,
-  getActiveScreen,
+  getActivePage,
   type Workspace,
 } from "@reiwuzen/tabria";
 
@@ -34,10 +34,10 @@ let state: Workspace = createWorkspace();
 state = openTab(state, { title: "Library" });
 
 const tab = getActiveTab(state);
-const screen = getActiveScreen(state);
+const page = getActivePage(state);
 ```
 
 ## Important rule
 
 Selectors are for view data only.
-If you need to update state, call an action such as `addTab`, `pushScreen`, or `updateScreenState`.
+If you need to update state, call an action such as `addTab`, `pushPage`, or `updatePageState`.

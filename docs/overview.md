@@ -1,12 +1,12 @@
 # Tabria Overview
 
-Tabria is a headless state engine for tabbed workspaces with nested screen navigation.
+Tabria is a headless state engine for tabbed workspaces with nested page navigation.
 
 It focuses on pure state transitions:
 
 - open/close/switch/move tabs
-- push/pop/replace/update screens per tab
-- restore recently closed tabs
+- push/pop/replace/update pages per tab
+- restore closed tabs from history
 
 Architecture:
 

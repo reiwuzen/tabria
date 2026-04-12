@@ -17,15 +17,16 @@ import {
 Exports:
 
 - flat named exports for all constructors, actions, and selectors
-- all public types as module types (`Workspace`, `Tab`, `Screen`, etc.)
+- all public types as module types (`Workspace`, `Tab`, `Page`, etc.)
 - optional grouped exports: `core`, `actions`, `selectors`, `api`
 - selectors are read-only view helpers; use actions to mutate state
+- screen-named exports still exist as compatibility aliases
 
 ## Core
 
 - `createWorkspace(opts?)`
 - `createTab(opts?)`
-- `createScreen(opts?)`
+- `createPage(opts?)`
 
 ## Actions
 
@@ -35,18 +36,18 @@ Exports:
 - `closeTab(state, tabId)`
 - `moveTab(state, tabId, toIndex)`
 - `reopenClosedTab(state, tabId?)`
-- `pushScreen(state, tabId, screen)`
-- `popScreen(state, tabId)`
-- `replaceScreen(state, tabId, screen)`
-- `updateScreenState(state, tabId, patch)`
+- `pushPage(state, tabId, page)`
+- `popPage(state, tabId)`
+- `replacePage(state, tabId, page)`
+- `updatePageState(state, tabId, patch)`
 
 ## Selectors
 
 - `getTabs(state)`
 - `getTab(state, tabId)`
 - `getActiveTab(state)`
-- `getActiveScreen(state, tabId?)`
-- `getScreenStack(state, tabId?)`
+- `getActivePage(state, tabId?)`
+- `getPageStack(state, tabId?)`
 
 Selectors are for derived read access only.
 They should not be used to mutate any part of workspace state.
