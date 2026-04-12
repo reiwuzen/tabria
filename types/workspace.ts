@@ -1,10 +1,9 @@
-import { Tab, TabId } from "./tab"
+import type { TabId, TabState } from "./tab"
 
 /**
  * Root state for a tab workspace.
  */
 export type WorkspaceState = {
   activeTab: TabId | null
-  tabs: Tab[]
-  recentlyClosed: Tab[]
+  tabs: TabState
 }
