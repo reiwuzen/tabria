@@ -5,8 +5,11 @@
 ```ts
 type WorkspaceState = {
   activeTab: TabId | null;
-  tabs: Tab[];
-  recentlyClosed: Tab[];
+  tabs: {
+    openOrder: TabId[];
+    closedOrder: TabId[];
+    storage: Record<TabId, Tab>;
+  };
 };
 ```
 
@@ -19,25 +22,35 @@ type Tab = {
   createdAt: number;
   updatedAt: number;
   closedAt?: number;
-  screenStack: Screen[];
+  runtimeState: "loaded" | "discarded";
+  pages: {
+    order: PageId[];
+    storage: Record<PageId, Page>;
+  };
+  currentPageId: PageId | null;
   meta?: Record<string, unknown>;
 };
 ```
 
-## Screen
+## Page
 
 ```ts
-type Screen = {
-  id: ScreenId;
+type Page = {
+  id: PageId;
+  key?: string;
+  url?: string;
   type: string;
   view?: string;
   state?: unknown;
+  meta?: Record<string, unknown>;
 };
 ```
 
-Each tab owns a `screenStack`, for example:
+Each tab owns an ordered page history, for example:
 
 `[Library, Manga, Reader]`
+
+`currentPageId` points at the currently active page within that ordered list.
 
 ## Read vs write
 
