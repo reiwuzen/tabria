@@ -1,4 +1,4 @@
-import { createScreen } from "./core/createScreen";
+import { createPage } from "./core/createPage";
 import { createTab } from "./core/createTab";
 import { createWorkspace } from "./core/createWorkspace";
 import { activateTab } from "./operations/activateTab";
@@ -6,27 +6,31 @@ import { addTab } from "./operations/addTab";
 import { closeTab } from "./operations/closeTab";
 import { moveTab } from "./operations/moveTab";
 import { openTab } from "./operations/openTab";
-import { popScreen } from "./operations/popScreen";
-import { pushScreen } from "./operations/pushScreen";
+import { popPage } from "./operations/popPage";
+import { pushPage } from "./operations/pushPage";
 import { reopenClosedTab } from "./operations/reopenClosedTab";
-import { replaceScreen } from "./operations/replaceScreen";
-import { updateScreenState } from "./operations/updateScreenState";
-import { getActiveScreen } from "./selectors/getActiveScreen";
+import { replacePage } from "./operations/replacePage";
+import { updatePageState } from "./operations/updatePageState";
+import { getActivePage } from "./selectors/getActivePage";
 import { getActiveTab } from "./selectors/getActiveTab";
-import { getScreenStack } from "./selectors/getScreenStack";
+import { getPageStack } from "./selectors/getPageStack";
 import { getTab } from "./selectors/getTab";
 import { getTabs } from "./selectors/getTabs";
 import type { JsonObject } from "./types/misc";
-import type { Screen as TabriaScreen, ScreenId } from "./types/screen";
-import type { Tab as TabriaTab, TabId } from "./types/tab";
+import type { Page as TabriaPage, PageId as TabriaPageId, PageState as TabriaPageState } from "./types/page";
+import type { Tab as TabriaTab, TabId, TabState as TabriaTabState } from "./types/tab";
 import type { WorkspaceState } from "./types/workspace";
 
-/** Public screen model type. */
-export type Screen = TabriaScreen;
-/** Public branded screen identifier type. */
-export type ScreenID = ScreenId;
+/** Public page model type. */
+export type Page = TabriaPage;
+/** Public page history state type. */
+export type PageState = TabriaPageState;
+/** Public branded page identifier type. */
+export type PageID = TabriaPageId;
 /** Public tab model type. */
 export type Tab = TabriaTab;
+/** Public tab collection state type. */
+export type TabState = TabriaTabState;
 /** Public branded tab identifier type. */
 export type TabID = TabId;
 /** Public JSON-like metadata object type. */
@@ -34,8 +38,16 @@ export type JsonObj = JsonObject;
 /** Public workspace root state type. */
 export type Workspace = WorkspaceState;
 
+export const createScreen = createPage;
+export const pushScreen = pushPage;
+export const replaceScreen = replacePage;
+export const popScreen = popPage;
+export const updateScreenState = updatePageState;
+export const getActiveScreen = getActivePage;
+export const getScreenStack = getPageStack;
+
 /** Core constructors that create state objects. */
-export { createWorkspace, createTab, createScreen };
+export { createWorkspace, createTab, createPage };
 
 /** Write-side state transition actions (immutable updates). */
 export {
@@ -44,23 +56,30 @@ export {
   closeTab,
   moveTab,
   openTab,
-  popScreen,
-  pushScreen,
+  popPage,
+  pushPage,
   reopenClosedTab,
-  replaceScreen,
-  updateScreenState,
+  replacePage,
+  updatePageState,
 };
 
 /**
  * Read-side selectors for deriving view data from workspace state.
  * Selectors are read-only helpers and must never be used to mutate state.
  */
-export { getTabs, getTab, getActiveTab, getActiveScreen, getScreenStack };
+export {
+  getTabs,
+  getTab,
+  getActiveTab,
+  getActivePage,
+  getPageStack,
+};
 
 /** Grouped core constructors. */
 export const core = {
   createWorkspace,
   createTab,
+  createPage,
   createScreen,
 } as const;
 
@@ -71,10 +90,14 @@ export const actions = {
   closeTab,
   moveTab,
   openTab,
+  popPage,
   popScreen,
+  pushPage,
   pushScreen,
   reopenClosedTab,
+  replacePage,
   replaceScreen,
+  updatePageState,
   updateScreenState,
 } as const;
 
@@ -86,7 +109,9 @@ export const selectors = {
   getTabs,
   getTab,
   getActiveTab,
+  getActivePage,
   getActiveScreen,
+  getPageStack,
   getScreenStack,
 } as const;
 
