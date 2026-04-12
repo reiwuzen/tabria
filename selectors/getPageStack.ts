@@ -1,21 +1,21 @@
-import type { Screen } from "../types/screen";
+import type { Page } from "../types/page";
 import type { TabId } from "../types/tab";
 import type { WorkspaceState } from "../types/workspace";
-import { cloneScreen } from "./clone";
+import { clonePage } from "./clone";
 
 /**
- * Returns a safe copy of a tab's screen stack.
+ * Returns a safe copy of a tab's page history.
  * Defaults to the active tab when no tab ID is provided.
  */
-export const getScreenStack = (
+export const getPageStack = (
   state: WorkspaceState,
-  tabId?: TabId
-): Screen[] => {
+  tabId?: TabId,
+): Page[] => {
   const targetId = tabId ?? state.activeTab;
   if (targetId === null || targetId === undefined) return [];
 
-  const tab = state.tabs.find((item) => item.id === targetId);
+  const tab = state.tabs.storage[targetId];
   if (!tab) return [];
 
-  return tab.screenStack.map((screen) => cloneScreen(screen));
+  return tab.pages.order.map((pageId) => clonePage(tab.pages.storage[pageId]));
 };
